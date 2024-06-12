@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Простий Сайт</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 15px 0;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #444;
+        }
+        nav a {
+            color: #fff;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+        }
+        nav a:hover {
+            background-color: #555;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        section {
+            margin-bottom: 20px;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .calculator {
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .display {
+            width: 100%;
+            height: 40px;
+            margin-bottom: 10px;
+            padding: 10px;
+            text-align: right;
+            font-size: 1.5em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .button {
+            padding: 20px;
+            font-size: 1.2em;
+            text-align: center;
+            cursor: pointer;
+            background-color: #FF0000;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #e0e0e0;
+        }
+        .button.operation {
+            background-color: #ff8c00;
+            color: white;
+        }
+        .button.operation:hover {
+            background-color: #e67e00;
+        }
+        .button.equals {
+            background-color: #4caf50;
+            color: white;
+            grid-column: span 2;
+        }
+        .button.equals:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Сайт Дмитра Клименка</h1>
+</header>
+
+<nav>
+    <a href="#home">Головна</a>
+    <a href="#about">Про мене</a>
+    <a href="#services">Борги</a>
+    <a href="#contact">Мій номер телефона</a>
+    <a href="#calculator">Калькулятор</a>
+</nav>
+
+<div class="container">
+    <section id="home">
+        <h2>Головна</h2>
+        <p>Це головна сторінка мого блогу. Тут ви знайдете основну про мене як особистість.</p>
+    </section>
+
+    <section id="about">
+        <h2>Про мене</h2>
+        <p>Я студент другого курсу бакалавра, в групі КІ-22</p>
+    </section>
+
+    <section id="services">
+        <h2>Борги</h2>
+        <p>Не відраховуйте мене, будь-ласка.</p>
+    </section>
+
+    <section id="contact">
+        <h2>Мій номер телефону</h2>
+        <p>Це конфеденційна інформація :)</p>
+    </section>
+
+<section id="calculator">
+        <h2>Калькулятор</h2>
+        <div class="calculator">
+            <input type="text" class="display" id="display" readonly>
+            <div class="buttons">
+                <div class="button" onclick="appendNumber('1')">1</div>
+                <div class="button" onclick="appendNumber('2')">2</div>
+                <div class="button" onclick="appendNumber('3')">3</div>
+                <div class="button operation" onclick="chooseOperation('+')">+</div>
+                <div class="button" onclick="appendNumber('4')">4</div>
+                <div class="button" onclick="appendNumber('5')">5</div>
+                <div class="button" onclick="appendNumber('6')">6</div>
+                <div class="button operation" onclick="chooseOperation('-')">-</div>
+                <div class="button" onclick="appendNumber('7')">7</div>
+                <div class="button" onclick="appendNumber('8')">8</div>
+                <div class="button" onclick="appendNumber('9')">9</div>
+                <div class="button operation" onclick="chooseOperation('*')">*</div>
+                <div class="button" onclick="appendNumber('0')">0</div>
+                <div class="button" onclick="clearDisplay()">C</div>
+                <div class="button equals" onclick="compute()">=</div>
+                <div class="button operation" onclick="chooseOperation('/')">/</div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<footer>
+    <p>&copy; 2024 Простий Сайт. Всі права захищені.</p>
+</footer>
+
+<script>
+    let display = document.getElementById('display');
+    let currentOperand = '';
+    let previousOperand = '';
+    let operation = null;
+
+    function appendNumber(number) {
+        if (number === '0' && display.value === '0') return;
+        if (display.value === '0') {
+            display.value = number;
+        } else {
+            display.value += number;
+        }
+    }
+
+    function chooseOperation(op) {
+        if (display.value === '') return;
+        if (currentOperand !== '') {
+            compute();
+        }
+        operation = op;
+        previousOperand = display.value;
+        display.value = '';
+    }
+
+    function compute() {
+        let computation;
+        const prev = parseFloat(previousOperand);
+        const current = parseFloat(display.value);
+        if (isNaN(prev) || isNaN(current)) return;
+        switch (operation) {
+            case '+':
+                computation = prev + current;
+                break;
+            case '-':
+                computation = prev - current;
+                break;
+            case '*':
+                computation = prev * current;
+                break;
+            case '/':
+                computation = prev / current;
+                break;
+            default:
+                return;
+        }
+        display.value = computation;
+        operation = null;
+        currentOperand = '';
+        previousOperand = '';
+    }
+
+    function clearDisplay() {
+        display.value = '';
+        currentOperand = '';
+        previousOperand = '';
+        operation = null;
+    }
+</script>
+
+</body>
+</html>
